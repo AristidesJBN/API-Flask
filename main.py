@@ -48,4 +48,33 @@ def create_pessoa():
         )
     )
 
+@app.route('/pessoa/<int:id_pessoa>', methods=['POST'])
+def update_pessoa(id_pessoa):
+    pessoa = request.json
+
+    cursor = mydb.cursor()
+    update_query = "UPDATE pessoa SET nome_pessoa = %s, data_nascimento = %s WHERE id_pessoa = %s"
+    cursor.execute(update_query, (pessoa['nome_pessoa'], pessoa['data_nascimento'], id_pessoa))
+    mydb.commit()
+
+    return make_response(
+        jsonify(
+            mensagem='Usuário atualizado!',
+            pessoa=pessoa
+        )
+    )
+
+@app.route('/pessoa/<int:id_pessoa>', methods=['DELETE'])
+def delete_pessoa(id_pessoa):
+    cursor = mydb.cursor()
+    delete_query = "DELETE FROM pessoa WHERE id_pessoa = %s"
+    cursor.execute(delete_query, (id_pessoa,))
+    mydb.commit()
+
+    return make_response(
+        jsonify(
+            mensagem='Usuário excluído!'
+        )
+    )
+
 app.run()
